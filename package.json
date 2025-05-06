@@ -1,7 +1,7 @@
 {
-  "name": "from-scratch",
+  "name": "instartgram",
   "version": "1.0.0",
-  "description": "",
+  "description": "A small clone of Instagram using TanStack Start",
   "type": "module",
   "main": "index.js",
   "scripts": {
@@ -23,13 +23,18 @@
     "vite-tsconfig-paths": "^5.1.4"
   },
   "dependencies": {
+    "@radix-ui/react-slot": "^1.2.2",
     "@tailwindcss/postcss": "^4.1.5",
     "@tanstack/react-router": "^1.119.0",
     "@tanstack/react-start": "^1.119.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "postcss": "^8.5.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "tailwind-merge": "^3.2.0",
     "tailwindcss": "^4.1.5",
+    "tailwindcss-animate": "^1.0.7",
     "vinxi": "^0.5.6"
   }
 }
