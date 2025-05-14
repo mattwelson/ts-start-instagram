@@ -1,6 +1,9 @@
 import { createRouter as createTanStackRouter } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
 
+import '@/styles/app.css'
+
+// TODO: add route masking to show modals for images from feeds
 export function createRouter() {
   const router = createTanStackRouter({
     routeTree,
