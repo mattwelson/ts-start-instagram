@@ -2,41 +2,21 @@ import { reset, seed } from "drizzle-seed";
 import "dotenv/config";
 import db from "@/db";
 import { faker } from "@faker-js/faker";
+import { eq } from "drizzle-orm";
 import * as schema from "./schema";
 
 async function main() {
   try {
-    // clean db
+    console.log("Removing old data 🗑️");
     await reset(db, schema);
 
-    // create some faker bios and usernames
-    // Users
-    const usernames = new Array(40)
-      .fill("")
-      .map(() => faker.internet.username());
-    const bios = new Array(20).fill("").map(() => faker.person.bio());
-    const avatarUrls = new Array(20).fill("").map(() => faker.image.avatar());
-    // Media
-    const mediaUrls = new Array(100)
-      .fill("")
-      .map(
-        () =>
-          `https://source.unsplash.com/random/1080x1080?${["nature", "food", "travel", "people", "animals"][Math.floor(Math.random() * 5)]}&${Math.random()}`,
-      );
-
+    console.log("Seeding 🌱🚿");
     await seed(db, schema).refine((f) => ({
       users: {
         count: 20,
         columns: {
-          username: f.valuesFromArray({ values: usernames, isUnique: true }),
           email: f.email(),
-          bio: f.valuesFromArray({ values: bios }),
           fullName: f.fullName(),
-          externalUrl: f.weightedRandom([
-            { weight: 0.8, value: f.default({ defaultValue: null }) },
-            { weight: 0.2, value: f.string() },
-          ]),
-          avatarUrl: f.valuesFromArray({ values: avatarUrls }),
           isVerified: f.weightedRandom([
             { weight: 0.3, value: f.default({ defaultValue: false }) },
             { weight: 0.7, value: f.default({ defaultValue: true }) },
@@ -92,11 +72,6 @@ async function main() {
           ],
         },
       },
-      media: {
-        columns: {
-          imageUrl: f.valuesFromArray({ values: mediaUrls }),
-        },
-      },
       likes: {
         count: 200,
       },
@@ -104,6 +79,52 @@ async function main() {
     }));
 
     console.log("Database seeded successfully! 🎉");
+    console.log("Enhancing User data 👥");
+
+    const users = await db.select().from(schema.users);
+    const enhancedUsers = users.map((user) => {
+      const name = {
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+      };
+      return {
+        ...user,
+        fullName: faker.internet.displayName(name),
+        username: faker.internet.username(name),
+        email: faker.internet.email(name),
+        bio: Math.random() > 0.7 ? faker.person.bio() : null,
+        avatarUrl: faker.image.avatar(),
+        externalUrl: Math.random() > 0.7 ? faker.internet.url() : null,
+      };
+    });
+
+    await Promise.all(
+      enhancedUsers.map((user) =>
+        db.update(schema.users).set(user).where(eq(schema.users.id, user.id)),
+      ),
+    );
+
+    console.log("User data enhanced successfully! 🎉");
+    console.log("Enhancing Media data 🏞️");
+
+    const media = await db.select().from(schema.media);
+    const enhancedMedia = media.map((media) => {
+      return {
+        ...media,
+        imageUrl: faker.image.url(),
+      };
+    });
+
+    // TODO: introduce batch here
+    await Promise.all(
+      enhancedMedia.map((media) =>
+        db.update(schema.media).set(media).where(eq(schema.media.id, media.id)),
+      ),
+    );
+
+    console.log("Media data enhanced successfully! 🎉");
+
+    console.log("Seed complete 🌲");
   } catch (error) {
     console.error("Error seeding database:", error);
     process.exit(1);
