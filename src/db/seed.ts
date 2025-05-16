@@ -1,6 +1,7 @@
 import { reset, seed } from "drizzle-seed";
 import "dotenv/config";
 import db from "@/db";
+import { faker } from "@faker-js/faker";
 import * as schema from "./schema";
 
 async function main() {
@@ -8,24 +9,34 @@ async function main() {
     // clean db
     await reset(db, schema);
 
+    // create some faker bios and usernames
+    // Users
+    const usernames = new Array(40)
+      .fill("")
+      .map(() => faker.internet.username());
+    const bios = new Array(20).fill("").map(() => faker.person.bio());
+    const avatarUrls = new Array(20).fill("").map(() => faker.image.avatar());
+    // Media
+    const mediaUrls = new Array(100)
+      .fill("")
+      .map(
+        () =>
+          `https://source.unsplash.com/random/1080x1080?${["nature", "food", "travel", "people", "animals"][Math.floor(Math.random() * 5)]}&${Math.random()}`,
+      );
+
     await seed(db, schema).refine((f) => ({
       users: {
         count: 20,
         columns: {
-          username: f.weightedRandom([
-            { weight: 0.3, value: f.string({ isUnique: true }) },
-            { weight: 0.7, value: f.fullName({ isUnique: true }) },
-          ]),
+          username: f.valuesFromArray({ values: usernames, isUnique: true }),
           email: f.email(),
+          bio: f.valuesFromArray({ values: bios }),
           fullName: f.fullName(),
-          bio: f.loremIpsum({ sentencesCount: 1 }),
           externalUrl: f.weightedRandom([
             { weight: 0.8, value: f.default({ defaultValue: null }) },
             { weight: 0.2, value: f.string() },
           ]),
-          avatarUrl: f.default({
-            defaultValue: `https://source.unsplash.com/random/300x300?portrait&${Math.random()}`,
-          }),
+          avatarUrl: f.valuesFromArray({ values: avatarUrls }),
           isVerified: f.weightedRandom([
             { weight: 0.3, value: f.default({ defaultValue: false }) },
             { weight: 0.7, value: f.default({ defaultValue: true }) },
@@ -83,10 +94,7 @@ async function main() {
       },
       media: {
         columns: {
-          // TODO: workout image generation for this and the avatar
-          imageUrl: f.default({
-            defaultValue: `https://source.unsplash.com/random/1080x1080?${["nature", "food", "travel", "people", "animals"][Math.floor(Math.random() * 5)]}&${Math.random()}`,
-          }),
+          imageUrl: f.valuesFromArray({ values: mediaUrls }),
         },
       },
       likes: {
@@ -94,6 +102,8 @@ async function main() {
       },
       comments: { count: 100 },
     }));
+
+    console.log("Database seeded successfully! 🎉");
   } catch (error) {
     console.error("Error seeding database:", error);
     process.exit(1);
