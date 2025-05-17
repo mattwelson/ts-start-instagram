@@ -22,6 +22,13 @@
       "when": 1747301052660,
       "tag": "0002_safe_phantom_reporter",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1747451188938,
+      "tag": "0003_magical_arachne",
+      "breakpoints": true
     }
   ]
 }

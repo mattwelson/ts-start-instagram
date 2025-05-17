@@ -4,6 +4,7 @@ import {
   boolean,
   index,
   pgTable,
+  primaryKey,
   text,
   timestamp,
   varchar,
@@ -39,6 +40,47 @@ export const usersRelations = relations(users, ({ one, many }) => ({
   following: many(follows, { relationName: "following" }),
 }));
 
+export const categories = pgTable("categories", {
+  id: text()
+    .primaryKey()
+    .$default(() => createId()),
+  name: varchar({ length: 50 }).notNull().unique(),
+});
+
+export const categoriesRelations = relations(categories, ({ many }) => ({
+  postEdges: many(categoryToPost),
+}));
+
+export const categoryToPost = pgTable(
+  "category_to_post",
+  {
+    categoryId: text()
+      .notNull()
+      .references(() => categories.id, { onDelete: "cascade" }),
+    postId: text()
+      .notNull()
+      .references(() => posts.id, { onDelete: "cascade" }),
+    createdAt: timestamp().notNull().defaultNow(),
+    updatedAt: timestamp().notNull().defaultNow(),
+  },
+  (t) => [
+    primaryKey({ columns: [t.categoryId, t.postId] }),
+    index("category_to_post_category_id_idx").on(t.categoryId),
+    index("category_to_post_post_id_idx").on(t.postId),
+  ],
+);
+
+export const categoryToPostRelations = relations(categoryToPost, ({ one }) => ({
+  category: one(categories, {
+    fields: [categoryToPost.categoryId],
+    references: [categories.id],
+  }),
+  post: one(posts, {
+    fields: [categoryToPost.postId],
+    references: [posts.id],
+  }),
+}));
+
 export const posts = pgTable(
   "posts",
   {
@@ -63,6 +105,7 @@ export const postsRelations = relations(posts, ({ one, many }) => ({
   media: many(media),
   likes: many(likes),
   comments: many(comments),
+  categoryEdges: many(categoryToPost),
 }));
 
 export const media = pgTable(
