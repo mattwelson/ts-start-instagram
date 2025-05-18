@@ -1,0 +1,19 @@
+{
+  "projectName": "ts-start-instagram",
+  "mode": "file-router",
+  "typescript": true,
+  "tailwind": true,
+  "packageManager": "pnpm",
+  "git": true,
+  "version": 1,
+  "framework": "react-cra",
+  "chosenAddOns": [
+    "biome",
+    "start",
+    "clerk",
+    "shadcn",
+    "t3env",
+    "tRPC",
+    "tanstack-query"
+  ]
+}
