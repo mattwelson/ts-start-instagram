@@ -1,4 +1,4 @@
-import type { AppRouter } from "@/trpc";
+import type { AppRouter } from "@/trpc/client";
 import type { inferRouterOutputs } from "@trpc/server";
 
 export function PostList({

@@ -1,8 +1,6 @@
 import db from "@/db";
 import { follows, posts } from "@/db/schema";
 import { UserPosts } from "@/modules/posts/ui/user-posts";
-import { useTRPC } from "@/trpc";
-import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { eq } from "drizzle-orm";
 
