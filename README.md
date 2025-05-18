@@ -11,11 +11,12 @@ This project is designed as a comprehensive demonstration of building a social m
 - **[TanStack Start](https://github.com/TanStack/start)**: For application architecture and routing
 - **[TanStack Query](https://tanstack.com/query)**: For server state management
 - **[TanStack Router](https://tanstack.com/router)**: For typesafe routing
-- **[TanStack Table](https://tanstack.com/table)**: For data tables and list views
 - **[TanStack Form](https://tanstack.com/form)**: For typesafe form handling
 - **[Drizzle ORM](https://github.com/drizzle-team/drizzle-orm)**: For typesafe database access
 - **[tRPC](https://trpc.io/)**: For end-to-end typesafe APIs
-- **Internationalization**: Using direct string translations (not keys)
+- **[Clerk](https://clerk.com/)**: For authentication
+- **[Shadcn UI](https://ui.shadcn.com/)**: For UI components
+- **Internationalization**: Using direct string translations
 
 ## Features
 

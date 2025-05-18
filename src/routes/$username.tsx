@@ -1,5 +1,8 @@
 import db from "@/db";
 import { follows, posts } from "@/db/schema";
+import { UserPosts } from "@/modules/posts/ui/user-posts";
+import { useTRPC } from "@/trpc";
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { eq } from "drizzle-orm";
 
@@ -13,6 +16,8 @@ export const Route = createFileRoute("/$username")({
     });
 
     if (!user) throw notFound();
+
+    // TODO: add trpc router prefetch posts at this point
 
     const followingCount = await db.$count(
       follows,
@@ -30,11 +35,12 @@ export const Route = createFileRoute("/$username")({
   },
 });
 
-export function UserPage() {
+function UserPage() {
   const { user, followingCount, followerCount, postCount } =
     Route.useLoaderData();
-  // TODO: load posts (and media) via tRPC
+
   // TODO: find the categories users posts are in?
+
   return (
     <div>
       <div>
@@ -53,6 +59,9 @@ export function UserPage() {
           {followerCount} followers, {followingCount} following, {postCount}{" "}
           posts
         </p>
+      </div>
+      <div>
+        <UserPosts userId={user.id} />
       </div>
     </div>
   );

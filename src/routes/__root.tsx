@@ -7,6 +7,7 @@ import {
 import type { ReactNode } from "react";
 
 import appCss from "@/styles/app.css?url";
+import { TrpcProvider } from "@/trpc/provider";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -47,7 +48,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
         <HeadContent />
       </head>
       <body>
-        {children}
+        <TrpcProvider>{children}</TrpcProvider>
         <Scripts />
       </body>
     </html>

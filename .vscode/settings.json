@@ -33,5 +33,5 @@
   "editor.codeActionsOnSave": {
     "source.organizeImports.biome": "explicit"
   },
-  "conventionalCommits.scopes": ["db", "user"]
+  "conventionalCommits.scopes": ["db", "user", "trpc"]
 }

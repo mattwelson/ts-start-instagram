@@ -263,3 +263,5 @@ export const followsRelations = relations(follows, ({ one }) => ({
     relationName: "following",
   }),
 }));
+
+export type User = typeof users.$inferSelect;
