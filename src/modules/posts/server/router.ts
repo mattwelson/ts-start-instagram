@@ -1,9 +1,9 @@
 import db from "@/db";
-import { router } from "@/trpc/init";
-import { publicProcedure } from "@/trpc/init";
+import { publicProcedure } from "@/integrations/trpc/init";
+import type { TRPCRouterRecord } from "@trpc/server";
 import { z } from "zod";
 
-export const postsRouter = router({
+export const postsRouter = {
   getPosts: publicProcedure
     .input(
       z.object({
@@ -15,7 +15,6 @@ export const postsRouter = router({
       }),
     )
     .query(async ({ input }) => {
-      console.log("I'm a server side thing!");
       // TODO: use limit and cursor to make this an infinite query
       const { userId } = input;
 
@@ -38,4 +37,4 @@ export const postsRouter = router({
         posts,
       };
     }),
-});
+} satisfies TRPCRouterRecord

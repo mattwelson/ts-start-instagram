@@ -1,5 +1,6 @@
-import { useTRPC } from "@/trpc/client";
-import { useQuery } from "@tanstack/react-query";
+
+import { useTRPC } from "@/integrations/trpc/react";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { PostList } from "./components/post-list";
 
 // TODO: change this to an infinite query
@@ -7,7 +8,7 @@ import { PostList } from "./components/post-list";
 export function UserPosts({ userId }: { userId: string }) {
   const trpc = useTRPC();
 
-  const { data: posts } = useQuery(
+  const { data: posts } = useSuspenseQuery(
     trpc.posts.getPosts.queryOptions({
       userId,
       limit: 20,

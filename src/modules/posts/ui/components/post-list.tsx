@@ -1,15 +1,16 @@
-import type { AppRouter } from "@/trpc/client";
+import type { TRPCRouter } from "@/integrations/trpc/router";
 import type { inferRouterOutputs } from "@trpc/server";
+import { PostPreview } from "./post-preview";
 
 export function PostList({
   posts,
 }: {
-  posts: inferRouterOutputs<AppRouter>["posts"]["getPosts"]["posts"];
+  posts: inferRouterOutputs<TRPCRouter>["posts"]["getPosts"]["posts"];
 }) {
   return (
-    <div>
+    <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))]">
       {posts.map((post) => (
-        <div key={post.id}>{post.caption}</div>
+          <PostPreview post={post} key={post.id} />
       ))}
     </div>
   );

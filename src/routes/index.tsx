@@ -1,39 +1,26 @@
-import { createFileRoute } from '@tanstack/react-router'
-import logo from '../logo.svg'
+import { UserList } from "@/modules/users/ui/user-list";
+import { HydrationBoundary, dehydrate, useQueryClient } from "@tanstack/react-query";
+import { createFileRoute } from "@tanstack/react-router";
+import { Suspense } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 
-export const Route = createFileRoute('/')({
-  component: App,
-})
+// TODO: convert to a feed instead of this
+export const Route = createFileRoute("/")({
+  component: IndexPage,
+  loader: async ({context: {queryClient, trpc}}) => {
+    void queryClient.prefetchQuery(trpc.users.getUsers.queryOptions())
+  },
+});
 
-function App() {
+function IndexPage() {
+  const queryClient = useQueryClient()
   return (
-    <div className="text-center">
-      <header className="min-h-screen flex flex-col items-center justify-center bg-[#282c34] text-white text-[calc(10px+2vmin)]">
-        <img
-          src={logo}
-          className="h-[40vmin] pointer-events-none animate-[spin_20s_linear_infinite]"
-          alt="logo"
-        />
-        <p>
-          Edit <code>src/routes/index.tsx</code> and save to reload.
-        </p>
-        <a
-          className="text-[#61dafb] hover:underline"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <a
-          className="text-[#61dafb] hover:underline"
-          href="https://tanstack.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn TanStack
-        </a>
-      </header>
-    </div>
-  )
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <ErrorBoundary fallback={<div>Something went wrong</div>}>
+        <Suspense fallback={<div>Loading...</div>}>
+          <UserList />
+        </Suspense>
+      </ErrorBoundary>
+    </HydrationBoundary>
+  );
 }
