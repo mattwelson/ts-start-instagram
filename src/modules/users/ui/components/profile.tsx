@@ -34,7 +34,7 @@ export function UserProfile({
         followingCount !== undefined &&
         postCount !== undefined && (
           <div className="flex gap-4">
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center flex-[1]">
               <div className="font-bold text-2xl">
                 {followerCount}
               </div>
@@ -42,7 +42,7 @@ export function UserProfile({
                 Followers
               </div>
             </div>
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center flex-[1]">
               <div className="font-bold text-2xl">
                 {followingCount}
               </div>
@@ -50,7 +50,7 @@ export function UserProfile({
                 Following
               </div>
             </div>
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center flex-[1]">
               <div className="font-bold text-2xl">
                 {postCount}
               </div>

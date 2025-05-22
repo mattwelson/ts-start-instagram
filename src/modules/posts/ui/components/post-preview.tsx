@@ -9,7 +9,7 @@ export function PostPreview({
   post: inferRouterOutputs<TRPCRouter>["posts"]["getPosts"]["posts"][number];
 }) {
   return (
-    <Link to={"/post/$postId"} params={{ postId: post.id }}>
+    <Link to={"/posts/$postId"} params={{ postId: post.id }}>
       <div className="relative">
         <p className="absolute top-2 right-2 text-white">
           {post.media.length > 1 && <GalleryHorizontalEnd />}
