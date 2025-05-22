@@ -33,6 +33,7 @@
     "source.organizeImports.biome": "explicit"
   },
   "conventionalCommits.scopes": [
-    "trpc"
+    "trpc",
+    "post"
   ]
 }
