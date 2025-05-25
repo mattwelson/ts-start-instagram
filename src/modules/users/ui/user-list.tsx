@@ -8,8 +8,6 @@ export function UserList() {
 
   const { data: users } = useSuspenseQuery(trpc.users.getUsers.queryOptions());
 
-  console.log("client?");
-
   return (
     <div>
       {users.map((user) => (
