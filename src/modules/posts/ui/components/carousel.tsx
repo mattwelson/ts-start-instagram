@@ -5,10 +5,9 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
+  CarouselSlideIndicator,
 } from "@/components/ui/carousel";
-import { useTRPC } from "@/integrations/trpc/react";
 import type { TRPCRouter } from "@/integrations/trpc/router";
-import { useSuspenseQuery } from "@tanstack/react-query";
 import type { inferRouterOutputs } from "@trpc/server";
 import { useEffect, useState } from "react";
 
@@ -42,15 +41,16 @@ export function PostCarousel({
   return (
     <div>
       <Carousel setApi={setApi}>
-        <CarouselContent>
+        <CarouselContent className="ml-0">
           {post.media.map((media) => (
-            <CarouselItem key={media.id}>
+            <CarouselItem key={media.id} className="pl-0">
               <img src={media.imageUrl} alt="" />
             </CarouselItem>
           ))}
         </CarouselContent>
         <CarouselPrevious className="left-4" />
         <CarouselNext className="right-4" />
+        <CarouselSlideIndicator />
       </Carousel>
 
       <div className="py-2 text-center text-sm text-muted-foreground">

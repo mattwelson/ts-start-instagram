@@ -21,7 +21,7 @@ function RouteComponent() {
 
   return (
     <HydrateClient>
-      <div className="max-w-full w-4xl flex flex-col mx-auto items-center">
+      <div className="w-full max-w-4xl flex flex-col mx-auto items-center">
         <PostCarousel post={post} />
         <pre>{JSON.stringify(post, null, 2)}</pre>
       </div>
