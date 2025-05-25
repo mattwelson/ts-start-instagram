@@ -17,30 +17,9 @@ export function PostCarousel({
   // TODO: not actually the correct type
   post: NonNullable<inferRouterOutputs<TRPCRouter>["posts"]["getPost"]["post"]>;
 }) {
- 
-  const [api, setApi] = useState<CarouselApi>();
-
-  const [current, setCurrent] = useState(0);
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    if (!api) {
-      return;
-    }
-
-    setCount(api.scrollSnapList().length);
-    setCurrent(api.selectedScrollSnap() + 1);
-
-    api.on("select", () => {
-      setCurrent(api.selectedScrollSnap() + 1);
-    });
-  }, [api]);
-
-  console.log({post})
 
   return (
-    <div>
-      <Carousel setApi={setApi}>
+      <Carousel>
         <CarouselContent className="ml-0">
           {post.media.map((media) => (
             <CarouselItem key={media.id} className="pl-0">
@@ -48,14 +27,13 @@ export function PostCarousel({
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className="left-4" />
-        <CarouselNext className="right-4" />
-        <CarouselSlideIndicator />
+        {post.media.length > 1 && (
+          <>
+            <CarouselPrevious className="left-4" />
+            <CarouselNext className="right-4" />
+            <CarouselSlideIndicator />
+          </>
+        )}
       </Carousel>
-
-      <div className="py-2 text-center text-sm text-muted-foreground">
-        Slide {current} of {count}
-      </div>
-    </div>
   );
 }
