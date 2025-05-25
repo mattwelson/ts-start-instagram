@@ -6,7 +6,9 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { useTRPC } from "@/integrations/trpc/react";
 import type { TRPCRouter } from "@/integrations/trpc/router";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import type { inferRouterOutputs } from "@trpc/server";
 import { useEffect, useState } from "react";
 
@@ -14,9 +16,9 @@ export function PostCarousel({
   post,
 }: {
   // TODO: not actually the correct type
-  post: inferRouterOutputs<TRPCRouter>["posts"]["getPosts"]["posts"][number];
+  post: NonNullable<inferRouterOutputs<TRPCRouter>["posts"]["getPost"]["post"]>;
 }) {
-  console.log("rendered where?");
+ 
   const [api, setApi] = useState<CarouselApi>();
 
   const [current, setCurrent] = useState(0);
@@ -34,6 +36,8 @@ export function PostCarousel({
       setCurrent(api.selectedScrollSnap() + 1);
     });
   }, [api]);
+
+  console.log({post})
 
   return (
     <div>

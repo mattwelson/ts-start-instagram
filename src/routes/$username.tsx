@@ -1,12 +1,13 @@
-import { getUser } from "@/db/fetchers";
 import { UserPosts } from "@/modules/posts/ui/user-posts";
 import { UserProfile } from "@/modules/users/ui/components/profile";
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { Outlet, createFileRoute, notFound } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/$username")({
   component: RouteComponent,
   loader: async ({ params, context: { queryClient, trpc } }) => {
-    const userAndMeta = await getUser(params.username);
+    const userAndMeta = await queryClient.fetchQuery(trpc.users.getUser.queryOptions({
+      username: params.username,
+    }));
     if (!userAndMeta) {
       throw notFound();
     }
@@ -19,12 +20,14 @@ export const Route = createFileRoute("/$username")({
     );
     return userAndMeta;
   },
+  notFoundComponent: () => <div>USER NOT FOUND</div>,
 });
 
 function RouteComponent() {
   const { user, meta } = Route.useLoaderData();
   return (
     <div>
+      <Outlet />
       <UserProfile user={user} meta={meta} />
       <div>
         <UserPosts userId={user.id} />

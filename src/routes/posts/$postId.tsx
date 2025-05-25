@@ -1,39 +1,30 @@
-import db from "@/db";
+import { HydrateClient } from "@/components/hydrate-client";
+import { useTRPC } from "@/integrations/trpc/react";
 import { PostCarousel } from "@/modules/posts/ui/components/carousel";
-import { ClientOnly, createFileRoute, notFound } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { createFileRoute, notFound } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/posts/$postId")({
   // TODO: loader - get post information and media, throw notFound if not found
-  loader: async ({ params }) => {
-    const post = await db.query.posts.findFirst({
-      where: (posts, { eq }) => eq(posts.id, params.postId),
-      with: {
-        user: true,
-        media: true,
-        likes: true,
-        comments: {
-          with: {
-            user: true,
-          },
-        },
-      },
-    });
-    if (!post) {
-      throw notFound();
-    }
-    return post;
-  },
   component: RouteComponent,
+  notFoundComponent: () => <div>POST NOT FOUND</div>,
 });
 
 function RouteComponent() {
-  const post = Route.useLoaderData();
+  const {postId} = Route.useParams();
+  const trpc = useTRPC()
+  const {data: {post}} = useSuspenseQuery(trpc.posts.getPost.queryOptions({postId}))
+  
+  if (!post) {
+    throw notFound()
+  }
+
   return (
-    <div className="max-w-full w-4xl flex flex-col mx-auto items-center">
-      <ClientOnly>
+    <HydrateClient>
+      <div className="max-w-full w-4xl flex flex-col mx-auto items-center">
         <PostCarousel post={post} />
-      </ClientOnly>
-      <pre>{JSON.stringify(post, null, 2)}</pre>
-    </div>
+        <pre>{JSON.stringify(post, null, 2)}</pre>
+      </div>
+    </HydrateClient>
   );
 }

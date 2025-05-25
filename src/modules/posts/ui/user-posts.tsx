@@ -8,6 +8,8 @@ import { PostList } from "./components/post-list";
 export function UserPosts({ userId }: { userId: string }) {
   const trpc = useTRPC();
 
+  console.log("client!")
+
   const { data: posts } = useSuspenseQuery(
     trpc.posts.getPosts.queryOptions({
       userId,
