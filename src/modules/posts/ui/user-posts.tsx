@@ -1,4 +1,3 @@
-
 import { useTRPC } from "@/integrations/trpc/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { PostList } from "./components/post-list";

@@ -1,6 +1,6 @@
 import {
-  Outlet,
   HeadContent,
+  Outlet,
   Scripts,
   createRootRouteWithContext,
 } from '@tanstack/react-router'
@@ -18,6 +18,7 @@ import type { QueryClient } from '@tanstack/react-query'
 
 import type { TRPCRouter } from '@/integrations/trpc/router'
 import type { TRPCOptionsProxy } from '@trpc/tanstack-react-query'
+import LayoutAddition from '../integrations/tanstack-query/layout.tsx'
 
 interface MyRouterContext {
   queryClient: QueryClient
@@ -69,6 +70,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         {children}
+        <LayoutAddition />
         <Scripts />
       </body>
     </html>

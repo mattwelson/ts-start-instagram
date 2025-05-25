@@ -12,6 +12,7 @@ export const createRouter = () => {
   const router = routerWithQueryClient(
     createTanstackRouter({
       routeTree,
+      
       context: {
         ...TanstackQuery.getContext(),
       },

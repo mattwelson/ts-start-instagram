@@ -13,10 +13,12 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as UsernameImport } from './routes/$username'
 import { Route as IndexImport } from './routes/index'
-import { Route as DemoTanstackQueryImport } from './routes/demo.tanstack-query'
-import { Route as DemoClerkImport } from './routes/demo.clerk'
-import { Route as DemoStartServerFuncsImport } from './routes/demo.start.server-funcs'
-import { Route as DemoStartApiRequestImport } from './routes/demo.start.api-request'
+import { Route as PostsPostIdImport } from './routes/posts/$postId'
+import { Route as DemoTanstackQueryImport } from './routes/demo/tanstack-query'
+import { Route as DemoClerkImport } from './routes/demo/clerk'
+import { Route as UsernamePostIdImport } from './routes/$username.$postId'
+import { Route as DemoStartServerFuncsImport } from './routes/demo/start.server-funcs'
+import { Route as DemoStartApiRequestImport } from './routes/demo/start.api-request'
 
 // Create/Update Routes
 
@@ -32,6 +34,12 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const PostsPostIdRoute = PostsPostIdImport.update({
+  id: '/posts/$postId',
+  path: '/posts/$postId',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const DemoTanstackQueryRoute = DemoTanstackQueryImport.update({
   id: '/demo/tanstack-query',
   path: '/demo/tanstack-query',
@@ -42,6 +50,12 @@ const DemoClerkRoute = DemoClerkImport.update({
   id: '/demo/clerk',
   path: '/demo/clerk',
   getParentRoute: () => rootRoute,
+} as any)
+
+const UsernamePostIdRoute = UsernamePostIdImport.update({
+  id: '/$postId',
+  path: '/$postId',
+  getParentRoute: () => UsernameRoute,
 } as any)
 
 const DemoStartServerFuncsRoute = DemoStartServerFuncsImport.update({
@@ -74,6 +88,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UsernameImport
       parentRoute: typeof rootRoute
     }
+    '/$username/$postId': {
+      id: '/$username/$postId'
+      path: '/$postId'
+      fullPath: '/$username/$postId'
+      preLoaderRoute: typeof UsernamePostIdImport
+      parentRoute: typeof UsernameImport
+    }
     '/demo/clerk': {
       id: '/demo/clerk'
       path: '/demo/clerk'
@@ -86,6 +107,13 @@ declare module '@tanstack/react-router' {
       path: '/demo/tanstack-query'
       fullPath: '/demo/tanstack-query'
       preLoaderRoute: typeof DemoTanstackQueryImport
+      parentRoute: typeof rootRoute
+    }
+    '/posts/$postId': {
+      id: '/posts/$postId'
+      path: '/posts/$postId'
+      fullPath: '/posts/$postId'
+      preLoaderRoute: typeof PostsPostIdImport
       parentRoute: typeof rootRoute
     }
     '/demo/start/api-request': {
@@ -107,20 +135,36 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
+interface UsernameRouteChildren {
+  UsernamePostIdRoute: typeof UsernamePostIdRoute
+}
+
+const UsernameRouteChildren: UsernameRouteChildren = {
+  UsernamePostIdRoute: UsernamePostIdRoute,
+}
+
+const UsernameRouteWithChildren = UsernameRoute._addFileChildren(
+  UsernameRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/$username': typeof UsernameRoute
+  '/$username': typeof UsernameRouteWithChildren
+  '/$username/$postId': typeof UsernamePostIdRoute
   '/demo/clerk': typeof DemoClerkRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
+  '/posts/$postId': typeof PostsPostIdRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/$username': typeof UsernameRoute
+  '/$username': typeof UsernameRouteWithChildren
+  '/$username/$postId': typeof UsernamePostIdRoute
   '/demo/clerk': typeof DemoClerkRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
+  '/posts/$postId': typeof PostsPostIdRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
 }
@@ -128,9 +172,11 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/$username': typeof UsernameRoute
+  '/$username': typeof UsernameRouteWithChildren
+  '/$username/$postId': typeof UsernamePostIdRoute
   '/demo/clerk': typeof DemoClerkRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
+  '/posts/$postId': typeof PostsPostIdRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
 }
@@ -140,24 +186,30 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/$username'
+    | '/$username/$postId'
     | '/demo/clerk'
     | '/demo/tanstack-query'
+    | '/posts/$postId'
     | '/demo/start/api-request'
     | '/demo/start/server-funcs'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/$username'
+    | '/$username/$postId'
     | '/demo/clerk'
     | '/demo/tanstack-query'
+    | '/posts/$postId'
     | '/demo/start/api-request'
     | '/demo/start/server-funcs'
   id:
     | '__root__'
     | '/'
     | '/$username'
+    | '/$username/$postId'
     | '/demo/clerk'
     | '/demo/tanstack-query'
+    | '/posts/$postId'
     | '/demo/start/api-request'
     | '/demo/start/server-funcs'
   fileRoutesById: FileRoutesById
@@ -165,18 +217,20 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  UsernameRoute: typeof UsernameRoute
+  UsernameRoute: typeof UsernameRouteWithChildren
   DemoClerkRoute: typeof DemoClerkRoute
   DemoTanstackQueryRoute: typeof DemoTanstackQueryRoute
+  PostsPostIdRoute: typeof PostsPostIdRoute
   DemoStartApiRequestRoute: typeof DemoStartApiRequestRoute
   DemoStartServerFuncsRoute: typeof DemoStartServerFuncsRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  UsernameRoute: UsernameRoute,
+  UsernameRoute: UsernameRouteWithChildren,
   DemoClerkRoute: DemoClerkRoute,
   DemoTanstackQueryRoute: DemoTanstackQueryRoute,
+  PostsPostIdRoute: PostsPostIdRoute,
   DemoStartApiRequestRoute: DemoStartApiRequestRoute,
   DemoStartServerFuncsRoute: DemoStartServerFuncsRoute,
 }
@@ -195,6 +249,7 @@ export const routeTree = rootRoute
         "/$username",
         "/demo/clerk",
         "/demo/tanstack-query",
+        "/posts/$postId",
         "/demo/start/api-request",
         "/demo/start/server-funcs"
       ]
@@ -203,19 +258,29 @@ export const routeTree = rootRoute
       "filePath": "index.tsx"
     },
     "/$username": {
-      "filePath": "$username.tsx"
+      "filePath": "$username.tsx",
+      "children": [
+        "/$username/$postId"
+      ]
+    },
+    "/$username/$postId": {
+      "filePath": "$username.$postId.tsx",
+      "parent": "/$username"
     },
     "/demo/clerk": {
-      "filePath": "demo.clerk.tsx"
+      "filePath": "demo/clerk.tsx"
     },
     "/demo/tanstack-query": {
-      "filePath": "demo.tanstack-query.tsx"
+      "filePath": "demo/tanstack-query.tsx"
+    },
+    "/posts/$postId": {
+      "filePath": "posts/$postId.tsx"
     },
     "/demo/start/api-request": {
-      "filePath": "demo.start.api-request.tsx"
+      "filePath": "demo/start.api-request.tsx"
     },
     "/demo/start/server-funcs": {
-      "filePath": "demo.start.server-funcs.tsx"
+      "filePath": "demo/start.server-funcs.tsx"
     }
   }
 }

@@ -1,6 +1,8 @@
 import db from "@/db";
+import { getUser } from "@/db/fetchers";
 import { publicProcedure } from "@/integrations/trpc/init";
 import type { TRPCRouterRecord } from "@trpc/server";
+import { z } from "zod";
 
 export const usersRouter = ({
   getUsers: publicProcedure.query(async () => {
@@ -10,5 +12,9 @@ export const usersRouter = ({
     });
 
     return users;
+  }),
+  getUser: publicProcedure.input(z.object({ username: z.string() })).query(async ({ input }) => {
+    const { username } = input;
+    return getUser(username);
   }),
 }) satisfies TRPCRouterRecord

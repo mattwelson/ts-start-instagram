@@ -36,5 +36,31 @@ export const postsRouter = {
       return {
         posts,
       };
+    }),getPost: publicProcedure
+    .input(
+      z.object({
+        postId: z.string(),
+      }),
+    )
+    .query(async ({ input }) => {
+      const { postId } = input;
+
+      const post = await db.query.posts.findFirst({
+        where: (posts, { eq }) => eq(posts.id, postId),
+        with: {
+          media: true,
+          user: true,
+          likes: true,
+          comments: {
+            with: {
+              user: true,
+            },
+          },
+        },
+      });
+
+      return {
+        post,
+      };
     }),
 } satisfies TRPCRouterRecord
